@@ -4,7 +4,7 @@
 >
 > *Built for the Inditex AI Hackathon, June 2026 · Refactored and polished July 2026*
 >
-> **[Live Demo →](https://your-username.github.io/retailai-copilot/)**
+> **[Live Demo →](https://marepri.github.io/retailai-copilot/)** *(requires Pages deployment)*
 
 A single-page store intelligence dashboard for Pull & Bear retail teams — built as a two-day hackathon prototype, then refactored into a production-quality portfolio piece. All data is deterministic and simulated: no backend, no live AI service, no external API dependencies. The entire application runs as a static site on GitHub Pages.
 
