@@ -1,95 +1,90 @@
 # RetailAI Copilot — Store Intelligence Dashboard
 
-> **Case Study** · *A hackathon-to-portfolio transformation*
->
-> *Built for the Inditex AI Hackathon, June 2026 · Refactored and polished July 2026*
->
-> **[Live Demo →](https://marepri.github.io/retailai-copilot/)** *(requires Pages deployment)*
+> Built for the Inditex AI Hackathon, June 2026. Refactored and polished July 2026.
 
-A single-page store intelligence dashboard for Pull & Bear retail teams — built as a two-day hackathon prototype, then refactored into a production-quality portfolio piece. All data is deterministic and simulated: no backend, no live AI service, no external API dependencies. The entire application runs as a static site on GitHub Pages.
-
-> **Honesty note**: This application displays simulated demo data. There is no live store connection, no real AI inference, and no external API calls. Every response comes from pre-built local datasets. See the [Honesty Audit](./.opencode/docs/ai-honesty-audit.md) for the full inventory.
+**This is a demo.** There's no live store connection, no real AI inference, and no database. Every interaction works from pre-built local datasets so the demo always runs — no API keys, no server, no flaky network calls. The code does exactly what it says.
 
 ---
 
-## Table of Contents
+## At a Glance
 
-- [The Problem](#the-problem)
-- [The Solution](#the-solution)
-- [Screens & Features](#screens--features)
-- [Technical Architecture](#technical-architecture)
-- [Key Technical Decisions](#key-technical-decisions)
-- [What I Learned](#what-i-learned)
-- [Future Improvements](#future-improvements)
-- [Running Locally](#running-locally)
-- [Deployment](#deployment)
+| | |
+|---|---|
+| **Stack** | React 18, Vite 5, JavaScript (JSX) |
+| **Routing** | `useState`-driven screen switching (6 screens) |
+| **Styling** | Inline styles + theme token system (dark/light) |
+| **State** | `useState` hooks + React Context |
+| **Data** | Deterministic JS modules — all local, no backend |
+| **Build** | ~218 KB JS bundle (~64 KB gzipped) |
+| **Deploy** | GitHub Pages static site |
+| **Linting** | ESLint + Prettier |
 
 ---
 
 ## The Problem
 
-Store teams at Inditex brands like Pull & Bear operate with fragmented information. Sales data lives in one system, inventory in another, and visit-readiness checklists are buried in email threads. During a hackathon with a **two-day window**, the challenge was to design a single interface that gives a store manager at-a-glance intelligence: *what happened, what needs attention, and what to do today.*
+Store teams at Inditex brands like Pull & Bear deal with fragmented information. Sales data is in one system, inventory in another, and visit-readiness checklists live in email threads. A store manager walking in for a shift has to piece together the story from multiple tools.
 
-The hard constraint: the demo had to deploy as a **static site with zero backend infrastructure** — no server, no database, no API keys, no build pipeline beyond what GitHub Pages provides. Every interaction had to be self-contained and work from a single `git push`.
+The hackathon constraint was tight: two days to build something demoable, deployable as a static site with zero backend infrastructure, and presentable to leadership. No server, no database, no API keys — just a `git push` to GitHub Pages.
 
----
+## What This Project Does
 
-## The Solution
-
-RetailAI Copilot is a decision-layer dashboard that consolidates store performance, product intelligence, and daily priorities into one browser-based interface. Rather than presenting raw spreadsheets, it approaches store management as a **conversation** — each screen answers a specific question a store manager might ask during a shift.
-
-The application comprises six screens, 12 reusable UI components, a two-palette theme system, and fully deterministic demo data. The entire JS bundle is ~218 KB gzipped to ~64 KB.
-
-```
-src/
-├── App.jsx                   — Root: routing, theme toggle, bottom nav
-├── main.jsx                  — React entry point
-├── styles/app.css            — Static CSS: animations, keyframes, utilities
-├── screens/                  — 6 screen components
-├── components/ui/            — 12 reusable UI primitives
-├── data/                     — 4 deterministic data modules
-├── hooks/                    — 2 custom hooks
-└── theme/                    — darkC/lightC tokens, ThemeContext, useTheme
-```
+RetailAI Copilot pulls store performance, product intelligence, and daily priorities into a single browser dashboard. Instead of raw spreadsheets, each screen answers a question a store manager might ask during a shift: *What happened? What needs attention? What do I do today?*
 
 ---
 
-## Screens & Features
+## My Role
 
-### Command Center (Home) — *"What is the state of my store right now?"*
+I designed and built the entire application — frontend, data layer, theming, and deployment. Here's what that looked like:
 
-The default landing view. A store health score, four live KPI tiles (sales, units, traffic, conversion vs LY), an AI Daily Briefing panel, priority actions ranked by impact, and an expected-gain projection.
+- **Concept & architecture** — Structured the app around six focused screens, each solving a specific problem for a store manager persona
+- **React components** — Built all 12 reusable UI components (KPI tiles, info panels, score badges, chat bubbles, loading skeletons, animated counters)
+- **Screen implementations** — Developed each screen as a self-contained component with local state, loading simulations, and responsive layouts
+- **Theme system** — Designed a two-palette (dark/light) token system with 30+ semantic color variables, wired through React Context so no component hardcodes colors
+- **Data layer** — Wrote deterministic data modules that simulate product catalogs, sales KPIs, Q&A responses, and collection metrics — all local, no backend
+- **Routing** — Implemented state-driven screen switching with animated transitions and a bottom navigation bar
+- **Deployment** — Configured Vite for GitHub Pages with relative asset paths and `.nojekyll` support
+- **AI honesty refactor** — Audited every "AI" label across the UI, replaced ambiguous language, and added "SIMULATED" badges so the demo is transparent about what it does and doesn't do
 
-**Technical highlight**: The KPI tiles use a custom `AnimatedNumber` component that animates value transitions with a requestAnimationFrame counter. This gives the dashboard a "live" feel without any real-time data connection.
+---
+
+## Screens
+
+### Command Center (Home) — *"What's the state of my store right now?"*
+
+![Command Center](docs/command-center.png)
+
+The landing view. Shows a store health score, four KPI tiles (sales, units, traffic, conversion vs last year), an AI Daily Briefing panel with priority actions, and an expected-gain projection. The KPI tiles use a custom `AnimatedNumber` component that runs a `requestAnimationFrame` counter to make the numbers feel live — even though the data is static.
 
 ### StyleAI — *"The customer wants something we don't have. What do I do?"*
 
-Three shop-floor tools:
-- **Save the Sale**: Type a product name → get the closest in-stock alternative with similarity score, stockroom zone, and match rationale
-- **Outfit Builder**: Generates three complete looks using only in-stock products around a hero item
-- **Smart Upsell**: Suggests complementary products based on selection
+![StyleAI](docs/styleai.png)
 
-**Technical highlight**: All lookups are deterministic array `filter`/`find` operations against pre-built datasets in `src/data/styleai.js`. The "AI Reasoning" panel displays static template text — there is no language model, no API call, and no randomness.
+Three shop-floor tools in one screen: **Save the Sale** finds the closest in-stock alternative when a product is missing, **Outfit Builder** generates complete looks from available inventory, and **Smart Upsell** suggests complementary products. All lookups run against a local product dataset — no API calls, just deterministic `filter`/`find` operations.
 
 ### MerchAI — *"A hero product is delayed. Can we fix the collection?"*
 
-Monitors a fictional "Urban Summer 2026" collection with a live health score. Flags a missing hero product and introduces a "Rebuild" workflow that replaces it with an in-stock substitute. The rebuild animates the health score from 62% to 91%, with before/after comparison on visual integrity, cross-sell rate, commercial strength, and estimated daily gain.
+![MerchAI](docs/merchai.png)
 
-**Technical highlight**: The rebuild uses a `setTimeout` chain for a 2.2-second loading simulation. The health score change, replacement match confidence, and impact metrics are all pre-defined in `src/data/merchai.js`.
+Monitors a fictional "Urban Summer 2026" collection with a health score. When a key product is flagged as missing, a "Rebuild" workflow replaces it with an in-stock substitute and animates the health score from 62% to 91% with before/after metrics. The rebuild uses a `setTimeout` chain for a 2-second loading simulation — all metrics are pre-defined in the local data module.
 
 ### RetailAI — *"Why are we behind on sales?"*
 
-A chat-style Q&A interface where the user asks about store performance. Responses are generated from a deterministic lookup table keyed to known question patterns — no language model involved. Also includes a family performance breakdown and a closing forecast with a risk-annotated 3-day action timeline.
+![RetailAI](docs/retailai.png)
 
-**Technical highlight**: The reply engine (`getDeterministicReply` in `src/data/retailai.js`) uses simple `String.includes()` keyword matching against a handful of known question patterns. This means zero network requests and instant response times.
+A chat-style Q&A where you type questions about store performance. Responses match against known patterns using `String.includes()` keyword matching — no language model involved. Also includes a family performance breakdown and a closing forecast with a 3-day action timeline.
 
 ### Catch Me Up — *"I've been away for a week. What did I miss?"*
 
-A returning-manager briefing tool. The user selects a duration (3, 7, 14, or 30 days) and the app assembles a structured briefing covering what happened, what matters, and what to do next — all from the local dataset.
+![Catch Me Up](docs/catch-me-up.png)
+
+A returning-manager briefing tool. Pick a duration (3, 7, 14, or 30 days) and the app assembles a structured briefing covering what happened, what matters, and next steps — all from the local dataset.
 
 ### Visit Readiness — *"The regional director is coming. Are we ready?"*
 
-A readiness assessment displaying an overall score (74/100) with breakdowns across Commercial Readiness, Collection Integrity, and Operations. Each area lists specific issues, and a 7-day action plan provides a timeline of recommended tasks.
+![Visit Readiness](docs/visit-readiness.png)
+
+A readiness assessment scoring 74/100 across Commercial Readiness, Collection Integrity, and Operations. Each area lists specific issues, and a 7-day action plan provides a timeline of recommended tasks.
 
 ---
 
@@ -97,103 +92,129 @@ A readiness assessment displaying an overall score (74/100) with breakdowns acro
 
 ### Tech Stack
 
-| Layer | Choice | Rationale |
-|-------|--------|-----------|
+| Layer | Choice | Why |
+|---|---|---|
 | Framework | React 18 (hooks, no classes) | Industry standard, component model |
-| Build | Vite 5 | Fast dev server, zero-config CSS/asset handling |
-| Language | JavaScript (JSX) | Faster iteration than TypeScript for a 2-day build |
-| Styling | Inline styles + theme tokens | Zero config, zero dependencies |
+| Build | Vite 5 | Fast dev server, zero-config asset handling |
+| Language | JavaScript (JSX) | Faster iteration for a 2-day build |
+| Styling | Inline styles + theme tokens | Zero config, zero extra dependencies |
 | Routing | `useState`-driven switch | 6 screens don't need React Router |
 | Animations | CSS `@keyframes` + JS counters | GPU-composited, no animation library |
 | Data | Deterministic JS modules | Always works, no network, no flaky demos |
-| Linting | ESLint 8 + Prettier | Enforced consistency during refactor |
-| Deploy | GitHub Pages | Static SPA, no infra |
+| Linting | ESLint 8 + Prettier | Kept things consistent during the refactor |
+| Deploy | GitHub Pages | Static SPA, zero infrastructure |
+
+### Project Structure
+
+```
+src/
+├── App.jsx                   — Root: routing, theme toggle, bottom nav
+├── main.jsx                  — React entry point
+├── styles/app.css            — Static CSS: animations, keyframes, utilities
+├── screens/                  — 6 screen components (one per view)
+├── components/ui/            — 12 reusable UI primitives
+├── data/                     — 4 deterministic data modules
+├── hooks/                    — 2 custom hooks
+└── theme/                    — dark/light tokens, ThemeContext, useTheme
+```
 
 ### State Management
 
-There is no state management library. Application state lives in:
-1. **`useState` hooks** within each screen component for local UI state (loading phases, active tabs, search queries)
-2. **`ThemeContext`** provided by `App.jsx` for the current color palette
+No state management library. Application state lives in three places:
+1. **`useState` hooks** inside each screen for local UI state (loading phases, active tabs, search queries)
+2. **`ThemeContext`** provided by `App.jsx` for the active color palette
 3. **Static imports** from `src/data/` for all content — no state synchronization needed
 
 ### Theme System
 
-The theme module (`src/theme/index.js`) exports two token objects — `darkC` and `lightC` — each containing ~30 semantic color tokens (backgrounds, text levels, accent colors, borders, surface variants). A React context wraps the app via `App.jsx`, and all components consume the active theme through the `useTheme()` hook. This means zero hardcoded color values in any component. Dark mode is a single boolean toggle.
+The theme module exports two token objects — `darkC` and `lightC` — each with about 30 semantic color tokens (backgrounds, text levels, accent colors, borders, surface variants). A React context wraps the whole app, and components consume the active theme through `useTheme()`. No hardcoded color values anywhere. Dark mode is a single boolean toggle.
 
 ### CSS Architecture
 
-Static CSS (animations, keyframes, utility classes, background elements) lives in `src/styles/app.css`, imported directly in `App.jsx`. Dynamic theme-dependent styles remain inline — they reference JavaScript variables and cannot be extracted to static files. This hybrid approach was the right balance for the project's scale.
+Static CSS (animations, keyframes, utility classes, background elements) lives in `src/styles/app.css`, imported directly in `App.jsx`. Dynamic theme-dependent styles stay inline because they reference JavaScript variables. This hybrid approach worked well for this project's scale.
 
 ---
 
-## Key Technical Decisions
+## Design Decisions
 
-### Why JavaScript, not TypeScript?
-The hackathon had a two-day window. JavaScript removed the need for type definitions, tsconfig setup, and build pipeline changes. For a portfolio piece, TypeScript would be the obvious addition in a production context — the component boundaries are clean enough that adding types would be mechanical, not architectural.
+### Why JavaScript instead of TypeScript?
+Two-day hackathon. Removing type definitions, tsconfig setup, and build pipeline changes saved real time. The component boundaries are clean enough that adding types later would be mechanical, not architectural.
 
-### Why inline styles, not CSS modules or Tailwind?
-Inline styles meant zero configuration, zero build plugins, and zero context switching between JSX and CSS files. The theme token system provided enough consistency for a demo of this scale. The trade-off became visible when animations needed `@keyframes` — that is where the extracted `app.css` file paid for itself.
+### Why inline styles instead of CSS modules or Tailwind?
+Zero configuration, zero build plugins, zero context switching between JSX and CSS files. The theme token system provided enough consistency at this scale. The trade-off showed up when animations needed `@keyframes` — that's where the extracted `app.css` file earned its place.
 
-### Why deterministic data, not a real API?
-The project had to deploy as a static site. No server, no database, no API keys. Every interaction had to work from a `git push` to a live URL with zero infrastructure. Deterministic data also eliminated flaky demo scenarios: the data always loads, the responses are always consistent, and there is nothing to debug during a live walkthrough.
+### Why deterministic data instead of a real API?
+The project had to deploy as a static site. No server, no database, no API keys. Deterministic data also removed every demo failure mode: the data always loads, responses are always consistent, and nothing breaks mid-presentation.
 
 ### Why no React Router?
-With six screens and no deep-linking requirements, a state-driven switch statement was simpler, lighter, and avoided an extra dependency:
-
-```jsx
-const renderScreen = () => {
-  switch (screen) {
-    case "home": return <CommandCenter onNav={setScreen} />;
-    case "styleai": return <StyleAI />;
-    // ...4 more cases
-  }
-};
-```
-
-The trade-off is that browser back/forward navigation is not supported — an acceptable cost for a kiosk-style demo.
+Six screens and no deep-linking needs. A state-driven switch is simpler, lighter, and avoids an extra dependency. The trade-off is no browser back/forward navigation — acceptable for a kiosk-style demo.
 
 ### Why the "AI Honesty" refactor?
-The original hackathon prototype used "AI" as a branding shortcut. During the portfolio refactor, every UI-visible AI reference was audited (35 total across 14 files) and either replaced with neutral language or paired with a "SIMULATED" badge. This was not just an ethical decision — it made the demo technically honest: the code does exactly what it says, no more, no less.
+The original hackathon prototype used "AI" loosely. During the refactor, I audited every visible AI reference (35 total across 14 files) and replaced ambiguous language or added SIMULATED badges. It makes the demo technically honest — the code does exactly what it says.
 
 ---
 
 ## What I Learned
 
 ### Designing for a specific user makes decisions faster
-Once I committed to a single persona — a Pull & Bear store manager preparing for a regional visit — every screen had a clear purpose. Features that didn't serve that persona were easy to cut. Half the screens that made it into the original hackathon were removed during the refactor.
+Once I committed to a single persona — a Pull & Bear store manager preparing for a regional visit — every screen had a clear purpose. Features that didn't serve that persona were easy to cut. Half the screens from the original hackathon got removed during the refactor.
 
 ### Inline styles scale poorly but ship fast
-The theme token system was the right compromise for a 48-hour build. It prevented color drift without the overhead of a CSS architecture. The trade-off became visible when animations and responsive breakpoints needed coordination — that is where extracting a `styles/app.css` file paid for itself. For a larger project, I would adopt CSS modules or a utility-first framework from day one.
+The theme token system was the right call for a 48-hour build. It prevented color drift without the overhead of a full CSS architecture. For a larger project, I'd use CSS modules or a utility-first framework from day one.
 
 ### Simulated data is a feature, not a shortcut
-For a demo that must always work, deterministic data removed every possible failure mode. No loading spinners that never resolve, no "API key not configured" errors, no network flakiness during a presentation. The discipline of clearly labeling content as "SIMULATED" became a design pattern in itself — it built trust with the audience.
+Deterministic data removed every possible failure mode: no loading spinners that never resolve, no "API key not configured" errors, no network flakiness during a demo. Labeling everything as SIMULATED became a design pattern on its own — it built trust with the audience.
 
 ### Dark mode from day one is cheap if you plan for it
-A theme token system with two color objects and a React context took about an hour to set up. Adding it after the fact would have meant auditing every hardcoded color across every component — a much larger cost. The `useTheme()` hook pattern meant I never had to think about theme after the initial setup.
+A theme token system with two color objects and a React context took about an hour to set up. Adding it after the fact would have meant auditing every hardcoded color across every component. The `useTheme()` hook pattern meant I never had to think about theme after the initial setup.
 
 ### Refactoring is where the real learning happens
-The hackathon produced working code. The refactor produced *understandable* code. Extracting the monolithic `App.jsx` into separate components, adding linting, adding a CSS file, and — most importantly — making the "AI" claims honest: these changes taught me more about production-quality software than the original build did.
+The hackathon produced working code. The refactor produced *understandable* code. Extracting the monolithic `App.jsx` into separate components, adding linting, adding a CSS file, and — most importantly — making the "AI" claims honest: these changes taught me more about production software than the original build did.
+
+---
+
+## Demo
+
+<!--
+  TODO: Add a short screen recording GIF showing the main flows:
+  - Navigating between screens via the bottom nav
+  - Dark/light mode toggle
+  - MerchAI rebuild animation
+  - RetailAI Q&A interaction
+-->
+
+| | |
+|---|---|
+| **Live Demo** | [retailai-copilot](https://marepri.github.io/retailai-copilot/) |
+| **Screenshots** | See each screen section above |
 
 ---
 
 ## Future Improvements
 
-- **TypeScript**: Add type definitions for the data modules and component props. The clean component boundaries make this a mechanical rather than architectural change.
-- **Unit tests**: The deterministic data layer is trivially testable. Vitest + React Testing Library would add confidence for future changes.
-- **Image optimization**: The six product images in `public/` total ~4.9 MB. Converting to AVIF/WebP and generating srcset variants would significantly improve load time.
-- **Code splitting**: Lazy-load each screen with `React.lazy()` and `Suspense` to reduce the initial bundle from ~218 KB to per-screen chunks.
-- **Accessibility audit**: Add ARIA labels, keyboard navigation, and focus management. The current implementation assumes mouse interaction.
+These are the things I'd add if I kept working on this:
+
+- **Firebase backend** — Replace the static data modules with real-time Firestore collections so the dashboard reflects actual store data
+- **Authentication** — Role-based access for store managers, regional directors, and HQ staff
+- **Real inventory API** — Connect to an actual retail ERP or warehouse API instead of the demo catalog
+- **AI model integration** — Swap the deterministic Q&A lookup with a lightweight LLM (via API) for actual natural language understanding
+- **Historical analytics** — Add date-range picking and trend charts so managers can compare performance over time
+- **Push notifications** — Alert store managers when KPIs drop below thresholds or when a visit readiness issue arises
+- **Mobile optimization** — The responsive layout works on phones, but a dedicated native or PWA experience would be better for store-floor use
+- **TypeScript** — Add type definitions for data modules and component props
+- **Unit tests** — The deterministic data layer is trivially testable with Vitest + React Testing Library
+- **Image optimization** — The six product images total ~4.9 MB. Converting to AVIF/WebP with srcset variants would help load times
 
 ---
 
 ## Running Locally
 
-The app runs through Vite. There is no standalone HTML build.
+The app runs through Vite. No standalone HTML build.
 
 **Prerequisites:** Node.js 18+ and npm.
 
 ```bash
-npm install        # Install dependencies (already done if cloned)
+npm install        # Install dependencies
 npm run dev        # Start dev server at http://localhost:3000
 npm run build      # Production build to dist/
 npm run preview    # Preview production build locally
@@ -211,7 +232,7 @@ npm run build:github-pages   # GitHub Pages build (relative paths + .nojekyll)
 
 ## Deployment
 
-The project is designed for GitHub Pages as a static SPA:
+Designed for GitHub Pages as a static SPA:
 
 ```bash
 npm run build:github-pages    # Build with relative asset paths
