@@ -52,37 +52,37 @@ I designed and built the entire application — frontend, data layer, theming, a
 
 ### Command Center (Home) — *"What's the state of my store right now?"*
 
-![Command Center](docs/command-center.png)
+<!-- TODO: Add screenshot → docs/command-center.png -->
 
 The landing view. Shows a store health score, four KPI tiles (sales, units, traffic, conversion vs last year), an AI Daily Briefing panel with priority actions, and an expected-gain projection. The KPI tiles use a custom `AnimatedNumber` component that runs a `requestAnimationFrame` counter to make the numbers feel live — even though the data is static.
 
 ### StyleAI — *"The customer wants something we don't have. What do I do?"*
 
-![StyleAI](docs/styleai.png)
+<!-- TODO: Add screenshot → docs/styleai.png -->
 
 Three shop-floor tools in one screen: **Save the Sale** finds the closest in-stock alternative when a product is missing, **Outfit Builder** generates complete looks from available inventory, and **Smart Upsell** suggests complementary products. All lookups run against a local product dataset — no API calls, just deterministic `filter`/`find` operations.
 
 ### MerchAI — *"A hero product is delayed. Can we fix the collection?"*
 
-![MerchAI](docs/merchai.png)
+<!-- TODO: Add screenshot → docs/merchai.png -->
 
 Monitors a fictional "Urban Summer 2026" collection with a health score. When a key product is flagged as missing, a "Rebuild" workflow replaces it with an in-stock substitute and animates the health score from 62% to 91% with before/after metrics. The rebuild uses a `setTimeout` chain for a 2-second loading simulation — all metrics are pre-defined in the local data module.
 
 ### RetailAI — *"Why are we behind on sales?"*
 
-![RetailAI](docs/retailai.png)
+<!-- TODO: Add screenshot → docs/retailai.png -->
 
 A chat-style Q&A where you type questions about store performance. Responses match against known patterns using `String.includes()` keyword matching — no language model involved. Also includes a family performance breakdown and a closing forecast with a 3-day action timeline.
 
 ### Catch Me Up — *"I've been away for a week. What did I miss?"*
 
-![Catch Me Up](docs/catch-me-up.png)
+<!-- TODO: Add screenshot → docs/catch-me-up.png -->
 
 A returning-manager briefing tool. Pick a duration (3, 7, 14, or 30 days) and the app assembles a structured briefing covering what happened, what matters, and next steps — all from the local dataset.
 
 ### Visit Readiness — *"The regional director is coming. Are we ready?"*
 
-![Visit Readiness](docs/visit-readiness.png)
+<!-- TODO: Add screenshot → docs/visit-readiness.png -->
 
 A readiness assessment scoring 74/100 across Commercial Readiness, Collection Integrity, and Operations. Each area lists specific issues, and a 7-day action plan provides a timeline of recommended tasks.
 
@@ -186,7 +186,7 @@ The hackathon produced working code. The refactor produced *understandable* code
 | | |
 |---|---|
 | **Live Demo** | [retailai-copilot](https://marepri.github.io/retailai-copilot/) |
-| **Screenshots** | See each screen section above |
+| **Screenshots** | *Coming soon — see TODO comments in each screen section* |
 
 ---
 
