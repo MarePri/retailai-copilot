@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.DS_Store
+.env
+*.local
+.playwright-mcp/
+.opencode/todo.md.tmp.*
+.opencode/todo.version.json
+.opencode/docs/
+.opencode/archive/
